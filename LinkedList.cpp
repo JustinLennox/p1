@@ -27,7 +27,6 @@ Queue & LinkedList::getQueueByCat(string cat){
             searchedNode = searchedNode->nextNode;
         }
     }
-    cout << "REturning epty node" << endl;
     Queue *emptyQueue = new Queue();
     return *emptyQueue;
 }

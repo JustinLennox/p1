@@ -23,10 +23,16 @@ using namespace std;
 LinkedList *queueList;
 Stack *orderStack = new Stack();
 
-vector<string> categories;
-vector<string> orders;
-vector<string> dispatch;
-vector<string> dispatchCategories;
+string *categoriesPointer;
+int categoriesLength = 0;
+string *ordersPointer;
+int ordersLength = 0;
+string *dispatchPointer;
+int dispatchLength = 0;
+string *dispatchCategoriesPointer;
+string dispatchCategoriesArray[1000];
+int dispatchCategoriesLength = 0;
+
 void createQueueWithCategory(string categoryName);
 void parseInputFile(ifstream& inputFile);
 void parseOrderFromString(int orderNumber, string orderLine);
@@ -49,8 +55,8 @@ int main(int argc, const char * argv[]) {
             std::cerr << "Error: Couldn't open the input file." << std::endl;
         }
     }
-    for(int i = (int)dispatchCategories.size() - 1; i >= 0; i--){
-        dispatchOrder(*queueList, dispatchCategories.at(i));
+    for(int i = (int)dispatchCategoriesLength - 1; i >= 0; i--){
+        dispatchOrder(*queueList, *(dispatchCategoriesPointer+i));
     }
     printLabel(*orderStack);
     
@@ -60,8 +66,14 @@ int main(int argc, const char * argv[]) {
 void parseInputFile(ifstream& inputFile){
     string line;
     bool readingCategories = false;
+    string categoryArray[1000];
+    categoriesPointer = categoryArray;
     bool readingOrders = false;
+    string orderArray[1000];
+    ordersPointer = orderArray;
     bool readingDispatch = false;
+    string dispatchArray[1000];
+    dispatchPointer = dispatchArray;
     while(getline(inputFile, line))
     {
         line = line.erase(line.find_last_not_of("\n\r") + 1);
@@ -78,32 +90,33 @@ void parseInputFile(ifstream& inputFile){
             readingOrders = false;
             readingDispatch = true;
         }else if(readingCategories){
-            categories.push_back(line);
+            categoryArray[categoriesLength] = line;
+            categoriesLength++;
         }else if(readingOrders){
-            orders.push_back(line);
+            orderArray[ordersLength] = line;
+            ordersLength++;
         }else if(readingDispatch){
-            dispatch.push_back(line);
+            dispatchArray[dispatchLength] = line;
+            dispatchLength++;
         }
     }
     inputFile.close();
     
     queueList = new LinkedList();
     
-    for(int i = 0; i < categories.size(); i++){
-        createQueueWithCategory(categories.at(i));
+    for(int i = 0; i < categoriesLength; i++){
+        createQueueWithCategory(*(categoriesPointer + i));
     }
     
-    for(int i = 0; i < orders.size(); i++){
-        parseOrderFromString(i+1, orders.at(i));
+    for(int i = 0; i < ordersLength; i++){
+        parseOrderFromString(i+1, *(ordersPointer + i));
     }
     
-    for(int i = 0; i < dispatch.size(); i++){
-        parseDispatchFromString(dispatch.at(i));
+    for(int i = 0; i < dispatchLength; i++){
+        parseDispatchFromString(*(dispatchPointer + i));
     }
-    for(int i = 0; i < categories.size(); i++){
-        Queue tempQueue = queueList->getQueueByCat(categories.at(i));
-        cout << "TEMP QUEUE CATEGORY: " << tempQueue.category << endl;
-        cout << "DEQUEUEING: " << tempQueue.dequeue().item << endl;
+    for(int i = 0; i < categoriesLength; i++){
+        Queue tempQueue = queueList->getQueueByCat(*(categoriesPointer + i));
     }
 
 }
@@ -144,6 +157,7 @@ void parseDispatchFromString(string dispatchLine){
     stringstream dispatchStream(dispatchLine);
     string dispatchSection;
     string categoryName;
+    dispatchCategoriesPointer = dispatchCategoriesArray;
     int numberOfItemsToDispatch = 0;
     
     for(int i = 0; i < 2; i++){
@@ -151,7 +165,8 @@ void parseDispatchFromString(string dispatchLine){
         dispatchSection = dispatchSection.erase(dispatchSection.find_last_not_of("\n\r") + 1);
         if(i == 0){
             categoryName = dispatchSection;
-            dispatchCategories.push_back(categoryName);
+            dispatchCategoriesArray[dispatchCategoriesLength] = categoryName;
+            dispatchCategoriesLength++;
         }else if(i == 1){
             numberOfItemsToDispatch = stoi(dispatchSection);
         }
@@ -173,10 +188,9 @@ void dispatchOrder(LinkedList &myList, string category){
 
 void printLabel(Stack &myStack){
     ofstream outputFile("output.txt");
-    cout << "Stack size: " << myStack.size;
     if(outputFile.good()){
         for(int i = 0; i < myStack.size; i++){
-            outputFile << myStack.pop().orderString(i);
+            outputFile << myStack.pop().orderString();
         }
     }
 }

@@ -12,5 +12,4 @@ Lee King, Hat, Clothing, Atlanta
 Abe Lincoln, Cushions, Home, Newark
 DISPATCH
 Grocery 1
-Electronics 1
 Clothing 2

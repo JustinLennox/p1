@@ -30,7 +30,6 @@ Order & Stack::pop(void){
         tailptr = poppedOrder.previousNode;
         return poppedOrder;
     }else{
-        cout << "NULL POP";
         Order *newOrder = new Order();
         return *newOrder;
     }

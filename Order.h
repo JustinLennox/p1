@@ -18,7 +18,7 @@ class Order {
     Order *nextNode = nullptr;
     Order *previousNode = nullptr;
     
-    string orderString(int orderNum);
+    string orderString();
 	
 	/**
     * Default Constructor

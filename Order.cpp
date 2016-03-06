@@ -12,9 +12,9 @@ Order::Order(const int orderNumber, const string &name, const string &item,const
     this->orderNumber = orderNumber;
 }
 
-string Order::orderString(int orderNum){
+string Order::orderString(){
     string orderString = "------------------------------\n";
-    orderString += "Order Number: " + to_string(orderNum) + "\n";
+    orderString += "Order Number: " + to_string(this->orderNumber) + "\n";
     orderString += "Name: " + this->name + "\n";
     orderString += "Item: " + this->item + "\n";
     orderString += "Ship To: " + this->shipArea + "\n";

@@ -8,6 +8,10 @@ This program simulates a SuperMarket's ordering and dispatch system. The program
 information via an input file and dispatches them using a variety of data structures. The dispatch
 information is stored as shipping labels and printed to an output file.
 
+Things Modified From Skeletion Code:
+-Each .h file has a corresponding .cpp file to implement all of its functions.
+-The SuperMarket.h files has been condensed to a single p1.cpp, but all of the SuperMarket functions are implemented.
+
 How To Compile:
 
 -Run the 'make' command
